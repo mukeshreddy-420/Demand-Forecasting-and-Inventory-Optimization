@@ -1,159 +1,562 @@
-# OptiRetail AI — Demand Forecasting & Inventory Optimization Agent
-## M8: Frontend + DevOps + QA Platform Documentation
+# 📦 Demand Forecasting & Inventory Optimization
 
-This repository houses the complete, enterprise-grade web application for the **Demand Forecasting and Inventory Optimization Agent**. Built specifically to serve retail inventory managers, replenishment planners, and executive stakeholders with clear, high-contrast, actionable intelligence.
+An AI-powered **Demand Forecasting and Inventory Optimization platform** that helps businesses predict future product demand, optimize stock levels, reduce overstocking and stockouts, and generate actionable inventory recommendations.
 
----
-
-## 1. Role & Architectural Boundaries (M8 Responsibility)
-
-As **M8 (Frontend + DevOps + QA)**, the scope is strictly focused on presentation, user experience, telemetry visualization, conversational AI interfacing, deployment orchestration, and verification:
-
-- **M1**: Project Lead + Integration
-- **M2**: Data Engineer
-- **M3**: EDA + Feature Engineer
-- **M4**: Forecasting ML Engineer *(Models NOT executed on frontend)*
-- **M5**: Inventory Optimization Engineer *(Optimization math NOT executed on frontend)*
-- **M6**: GenAI / Agent Engineer *(LLM agent served via backend)*
-- **M7**: Backend + FastAPI Engineer *(Endpoints target for frontend)*
-- **M8**: **Frontend + DevOps + QA (This Project)**
-
-> **Architectural Guardrail**: The frontend contains **zero** machine learning algorithms or inventory optimization formulas. It communicates through a switchable service layer (src/services/api.js) that renders results supplied by the backend. During development, a dedicated mock layer (src/mock/mockData.js, src/services/mockApi.js) simulates the exact FastAPI contract.
+The system combines **Machine Learning, FastAPI, React, PostgreSQL/Supabase, and Generative AI** to provide data-driven inventory decisions through an interactive dashboard.
 
 ---
 
-## 2. Authoritative Dataset & Reference Conformity
+## 🚀 Key Features
 
-All telemetry, dropdowns, and schemas strictly mirror the project's authoritative reference dataset (sales_data 7.csv):
-- **Stores**: Exactly S001, S002, S003, S004, S005
-- **Products**: Exactly P0001 through P0020 (*Note: P1024 does not exist in the dataset and is strictly excluded*)
-- **Merchandise Categories**: Electronics, Clothing, Groceries, Toys, Furniture
-- **Geographic Territories**: North, South, East, West
-- **Standardized Features**: Date, Store ID, Product ID, Category, Region, Inventory Level, Units Sold, Units Ordered, Price, Discount, Weather Condition, Promotion, Competitor Pricing, Seasonality, Epidemic, Demand
+### 📈 Demand Forecasting
 
----
+* Predicts future product demand using Machine Learning.
+* Uses historical sales and inventory-related features.
+* Built using an **ExtraTrees Regressor** model.
+* Provides product-level demand predictions.
 
-## 3. Sidebar Modules & Application Pages
+### 📦 Inventory Optimization
 
-The application provides 11 persistent analytical views accessible via the responsive sidebar:
+* Calculates recommended inventory levels based on predicted demand.
+* Helps reduce excess inventory and stockout risks.
+* Supports inventory planning and replenishment decisions.
+* Uses inventory management concepts such as **Economic Order Quantity (EOQ)**.
 
-| Icon | Page | Description |
-|---|---|---|
-| 🏠 | **Dashboard** | Executive overview with 4 KPI cards (Forecast, Stock, Risk, Reorder), 14-day trajectory chart, stock vs demand comparison, risk donut, and priority replenishment queue. |
-| 📊 | **Demand Forecast** | Multi-horizon predictive demand modeler (7, 14, 30 days) with confidence intervals and day-by-day forecast schedule. |
-| 📦 | **Inventory Pulse** | Real-time stock monitor tracking Healthy, Low, and Critical SKU buffers and network inventory valuations. |
-| 🚨 | **Risk Radar** | Stockout vulnerability radar categorizing items into High, Medium, and Low risk tiers with probability scores. |
-| 🔄 | **Reorder Recommendations** | Actionable replenishment queue with "Reorder Now", "Monitor", and "No Reorder Needed" statuses, lead times, and PO approvals. |
-| 📈 | **Inventory Optimization** | Tradeoff modeling between carrying costs, stockout penalties, and service level targets (95% optimal minima). |
-| 🏬 | **Store & Region Analysis** | Network performance across Stores S001–S005, regional territory demand, and category volume breakdowns. |
-| 📋 | **Product Details** | Granular 360° SKU intelligence with weather sensitivity, promotions, competitor pricing, and historical demand trends. |
-| 🤖 | **AI Inventory Assistant** | Conversational chat interface for natural-language queries regarding stockout risks, replenishment needs, and demand drivers. Prepares integration with POST /chat. |
-| 🔔 | **Alerts** | Operational notification center for critical stockout warnings, demand surges, and acknowledgment tracking. |
-| 📤 | **Reports / Export** | Executive reporting suite offering one-click CSV downloads for forecasts, stock balances, risk audits, and PO schedules. |
+### 🤖 AI-Powered Recommendations
 
-**Additional Core Workflows:**
-- **Enterprise Authentication (/login)**: Sign-in screen with Remember Me, Forgot Password, and session Logout.
-- **Dataset Upload & Validation**: In-app CSV upload modal verifying conformity against all 16 required columns without touching the original CSV.
+* Generates actionable recommendations based on forecast and inventory data.
+* Helps identify products that may require replenishment.
+* Provides natural-language explanations using Generative AI.
 
----
+### 📊 Interactive Dashboard
 
-## 4. Technology Stack
+* Displays demand forecasts and inventory insights.
+* Provides product-level information.
+* Visualizes important inventory metrics.
+* Allows users to interact with the forecasting system through a modern web interface.
 
-- **Framework**: React 19 + Vite 8
-- **Routing**: React Router DOM 7
-- **Styling**: Tailwind CSS v4 (Enterprise dark slate analytics theme)
-- **Icons**: Lucide React
-- **Data Visualization**: Recharts (Composed charts, bar charts, donuts, confidence bands)
-- **Testing & QA**: Vitest + Testing Library
-- **DevOps**: Docker, Docker Compose, Nginx Alpine
+### 🔐 Backend Validation
+
+* Uses **Pydantic** for request and response validation.
+* Ensures API data follows the expected structure.
+* Provides reliable communication between frontend and backend.
 
 ---
 
-## 5. Getting Started & Local Development
+# 🏗️ System Architecture
 
-### Prerequisites
-- Node.js v18+ (tested on Node v20/v24)
-- npm v9+
+```text
+                    ┌─────────────────────┐
+                    │     React Frontend  │
+                    │     Dashboard UI    │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │    FastAPI Backend  │
+                    │     REST APIs       │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │  Pydantic Validation│
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │    Service Layer    │
+                    │  Business Logic     │
+                    └──────┬─────┬────────┘
+                           │     │
+              ┌────────────┘     └─────────────┐
+              ▼                                ▼
+    ┌──────────────────┐              ┌─────────────────┐
+    │ PostgreSQL /     │              │ Machine Learning│
+    │ Supabase         │              │ ExtraTrees      │
+    └──────────────────┘              └────────┬────────┘
+                                               │
+                                               ▼
+                                      ┌─────────────────┐
+                                      │ Demand Forecast │
+                                      └────────┬────────┘
+                                               │
+                                               ▼
+                                      ┌─────────────────┐
+                                      │ Inventory Logic │
+                                      │ / EOQ / Reorder │
+                                      └────────┬────────┘
+                                               │
+                                               ▼
+                                      ┌─────────────────┐
+                                      │      GenAI      │
+                                      │ Recommendations │
+                                      └────────┬────────┘
+                                               │
+                                               ▼
+                                      ┌─────────────────┐
+                                      │   JSON Response │
+                                      └────────┬────────┘
+                                               │
+                                               ▼
+                                      ┌─────────────────┐
+                                      │ React Dashboard │
+                                      └─────────────────┘
+```
 
-### 1. Install Dependencies
-`ash
+---
+
+# 🛠️ Technology Stack
+
+## Frontend
+
+* **React.js**
+* JavaScript
+* HTML5
+* CSS3
+* REST API integration
+* Dashboard visualizations
+
+## Backend
+
+* **Python**
+* **FastAPI**
+* Pydantic
+* REST APIs
+* Uvicorn
+
+## Machine Learning
+
+* **Scikit-learn**
+* ExtraTrees Regressor
+* Pandas
+* NumPy
+
+## Database
+
+* **PostgreSQL**
+* **Supabase**
+
+## AI
+
+* Generative AI
+* AI-powered inventory recommendations
+* Natural-language insights
+
+## Deployment
+
+* **AWS EC2** – Backend
+* **Amazon S3** – Frontend hosting
+* REST-based frontend/backend communication
+
+---
+
+# 🧠 Machine Learning Pipeline
+
+The forecasting pipeline follows these steps:
+
+```text
+Historical Sales Data
+        ↓
+Data Preprocessing
+        ↓
+Feature Engineering
+        ↓
+Train/Test Split
+        ↓
+ExtraTrees Regressor
+        ↓
+Demand Prediction
+        ↓
+Inventory Optimization
+        ↓
+AI Recommendations
+```
+
+### Model
+
+The project uses an **ExtraTrees Regressor** for demand forecasting.
+
+ExtraTrees builds multiple randomized decision trees and combines their predictions to produce the final regression output.
+
+The model is suitable for capturing nonlinear relationships between demand and influencing factors.
+
+---
+
+# 📊 Inventory Optimization
+
+The system uses forecasted demand along with inventory parameters to support replenishment decisions.
+
+### Economic Order Quantity (EOQ)
+
+EOQ can be calculated using:
+
+```text
+EOQ = √((2 × D × S) / H)
+```
+
+Where:
+
+* `D` = Annual demand
+* `S` = Ordering cost per order
+* `H` = Holding cost per unit per year
+
+The resulting quantity can be used as a reference for determining an efficient order size.
+
+### Reorder Planning
+
+The system can combine:
+
+* Forecasted demand
+* Current inventory
+* Lead time
+* Safety stock
+* Reorder point
+* EOQ
+
+to generate inventory recommendations.
+
+---
+
+# 🔌 API Architecture
+
+The backend exposes REST APIs through FastAPI.
+
+Example flow:
+
+```text
+React
+  ↓
+HTTP Request
+  ↓
+FastAPI Endpoint
+  ↓
+Pydantic Validation
+  ↓
+Service Layer
+  ↓
+Database / ML / Inventory Logic
+  ↓
+GenAI
+  ↓
+JSON Response
+  ↓
+React
+```
+
+### Example Health Check
+
+```http
+GET /health
+```
+
+Example response:
+
+```json
+{
+  "status": "healthy"
+}
+```
+
+---
+
+# 📁 Project Structure
+
+```text
+demand-forecasting-inventory/
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── ...
+│
+├── backend/
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── models/
+│   │   └── schemas/
+│   │
+│   ├── ml/
+│   │   ├── model/
+│   │   ├── preprocessing/
+│   │   └── forecasting/
+│   │
+│   ├── requirements.txt
+│   └── ...
+│
+├── data/
+│   └── ...
+│
+├── README.md
+└── .gitignore
+```
+
+> The exact folder structure may vary depending on the implementation.
+
+---
+
+# ⚙️ Installation & Setup
+
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/<your-username>/demand-forecasting-inventory.git
+
+cd demand-forecasting-inventory
+```
+
+---
+
+## 2. Backend Setup
+
+Navigate to the backend:
+
+```bash
+cd backend
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate it on Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+Activate it on Linux/macOS:
+
+```bash
+source venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 3. Configure Environment Variables
+
+Create a `.env` file inside the backend directory.
+
+Example:
+
+```env
+DATABASE_URL=your_database_url
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
+GENAI_API_KEY=your_genai_api_key
+```
+
+**Do not commit `.env` files or API keys to GitHub.**
+
+---
+
+## 4. Start the Backend
+
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Backend will be available at:
+
+```text
+http://localhost:8000
+```
+
+FastAPI documentation:
+
+```text
+http://localhost:8000/docs
+```
+
+---
+
+# 💻 Frontend Setup
+
+Open another terminal:
+
+```bash
 cd frontend
+```
+
+Install dependencies:
+
+```bash
 npm install
-`
+```
 
-### 2. Start Development Server
-`ash
+Start the development server:
+
+```bash
 npm run dev
-`
-The application will launch on http://localhost:5173.
+```
 
-### 3. Run Automated QA Tests
-`ash
-npm test
-`
-Executes the Vitest suite verifying dataset compliance, endpoint contracts, and UI logic.
-
-### 4. Build for Production
-`ash
-npm run build
-`
-Creates an optimized, minified production bundle in dist/.
+The frontend will be available through the URL displayed by the development server.
 
 ---
 
-## 6. Deployment & DevOps Setup
+# 🔄 Example Prediction Flow
 
-### Docker Deployment
-Build and run the containerized application using the multi-stage Dockerfile and Nginx:
-`ash
-# Build Docker image
-docker build -t optiretail-frontend .
+A typical prediction request follows this process:
 
-# Run container on port 80
-docker run -p 80:80 optiretail-frontend
-`
-
-### Docker Compose
-Launch with a single command:
-`ash
-docker compose up -d
-`
-Access the application at http://localhost:3000.
-
-### CI/CD Pipeline
-A preconfigured GitHub Actions workflow (.github/workflows/ci.yml) automatically lints, tests, and builds the frontend on every push or pull request to main or develop.
+```text
+User selects product
+        ↓
+React sends request
+        ↓
+FastAPI receives request
+        ↓
+Pydantic validates input
+        ↓
+Service layer processes request
+        ↓
+ML model predicts demand
+        ↓
+Inventory logic calculates requirements
+        ↓
+GenAI generates explanation/recommendation
+        ↓
+Backend returns JSON
+        ↓
+React displays result
+```
 
 ---
 
-## 7. M8 to M7 Backend Integration Guide
+# 📌 Example Use Case
 
-> [!NOTE]
-> **Handoff Notice for M7 (Backend + FastAPI Engineer)**:
-> This frontend currently uses mock data for development and features an isolated API service layer (src/services/api.js). 
-> **You do NOT need to modify any UI components to connect the live backend.**
+Consider a retail product with historical sales data.
 
-### How to Connect FastAPI Backend:
-1. Open .env (or set the environment variable):
-   `env
-   VITE_API_BASE_URL=http://localhost:8000
-   `
-2. Restart the Vite dev server (
-pm run dev).
-3. The frontend will automatically route requests to the live backend.
+The system can:
 
-### Expected Backend Endpoints:
-- GET /products: Returns list of SKUs (P0001–P0020)
-- GET /products/{id}: Returns single product details
-- GET /stores: Returns store list (S001–S005)
-- GET /forecast?storeId={}&productId={}&horizon={}: Returns time series and summary metrics
-- GET /inventory: Returns stock counts, valuation, and status breakdown
-- GET /risk?storeId={}: Returns high/medium/low risk classifications
-- GET /reorder: Returns prioritized replenishment recommendations
-- GET /inventory-optimization: Returns carrying vs stockout cost curve data
-- GET /store-region: Returns multi-store and regional metrics
-- GET /alerts: Returns operational notification feed
-- POST /alerts/{id}/acknowledge: Acknowledges an alert
-- POST /chat: Receives { message: string }, returns { response: string, sender: string }
-- POST /upload: Handles CSV file multipart upload
+1. Analyze historical demand.
+2. Predict future demand.
+3. Check current inventory.
+4. Calculate inventory requirements.
+5. Consider replenishment parameters.
+6. Generate an actionable recommendation.
+7. Display the result on the dashboard.
 
-If your FastAPI endpoints use slightly different path signatures or query parameter names, adjust only src/services/api.js. The UI will remain unaffected.
+Example:
+
+```text
+Predicted Demand
+       ↓
+Current Stock
+       ↓
+Safety Stock
+       ↓
+Reorder Point
+       ↓
+EOQ
+       ↓
+Inventory Recommendation
+```
+
+---
+
+# ☁️ Deployment
+
+The application can be deployed using a cloud-based architecture.
+
+```text
+                 Internet
+                    │
+                    ▼
+          ┌──────────────────┐
+          │  Amazon S3       │
+          │ React Frontend   │
+          └────────┬─────────┘
+                   │
+                   │ REST API
+                   ▼
+          ┌──────────────────┐
+          │   AWS EC2        │
+          │ FastAPI Backend  │
+          └────────┬─────────┘
+                   │
+             ┌─────┴─────┐
+             ▼           ▼
+       PostgreSQL       ML Model
+        / Supabase
+```
+
+The frontend and backend communicate through REST APIs.
+
+---
+
+# 🔒 Security
+
+The project follows basic security practices including:
+
+* Environment variables for sensitive credentials.
+* `.gitignore` for secret files.
+* Pydantic request validation.
+* API-based separation between frontend and backend.
+* No API keys stored directly in source code.
+
+---
+
+# 📈 Future Improvements
+
+* Add time-series models such as **XGBoost, LightGBM, Prophet, or LSTM**.
+* Implement automated model retraining.
+* Add real-time inventory synchronization.
+* Introduce supplier and lead-time optimization.
+* Add advanced safety-stock calculations.
+* Add multi-product forecasting.
+* Add role-based authentication.
+* Add automated alerts for low-stock products.
+* Improve forecasting with external factors such as promotions and seasonality.
+* Add model monitoring and performance tracking.
+
+---
+
+# 🎯 Project Goals
+
+The primary goals of this project are to:
+
+* Improve demand prediction accuracy.
+* Reduce inventory holding costs.
+* Reduce stockout situations.
+* Support data-driven replenishment.
+* Automate inventory decision-making.
+* Provide understandable AI-powered recommendations.
+
+---
+
+# 👨‍💻 Authors
+
+**Mukesh Reddy**
+
+Built as an AI/ML and full-stack project focused on **Demand Forecasting, Inventory Optimization, Machine Learning, and Generative AI**.
+
+---
+
+# ⭐ Contributing
+
+Contributions are welcome.
+
+```bash
+git checkout -b feature/new-feature
+git add .
+git commit -m "Add new feature"
+git push origin feature/new-feature
+```
+
+Then open a Pull Request.
+
+---
+
+# 📄 License
+
+This project is intended for educational, demonstration, and development purposes.
