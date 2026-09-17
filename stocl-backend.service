@@ -1,0 +1,16 @@
+[Unit]
+Description=Stocl Demand Forecasting & Inventory Backend Service
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/conizent
+EnvironmentFile=/home/ubuntu/conizent/.env
+ExecStart=/home/ubuntu/conizent/venv/bin/gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --timeout 120
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
